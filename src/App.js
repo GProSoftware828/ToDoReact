@@ -213,15 +213,21 @@ const mapDispatchToProps = dispatch => {
         console.log('dispatch called no payload')
       ),
     onTodoCompleted: ToDoTitle =>
-      dispatch({
-        type: actionTypes.ADD_COMPLETED,
-        todoTitle: ToDoTitle
-      }),
+      dispatch(
+        {
+          type: actionTypes.ADD_COMPLETED,
+          todoTitle: ToDoTitle
+        },
+        console.log('completed called no payload', ToDoTitle)
+      ),
     onRemoveItem: CompletedTitle =>
-      dispatch({
-        type: actionTypes.REMOVE_COMPLETED,
-        completedItem: CompletedTitle
-      })
+      dispatch(
+        {
+          type: actionTypes.REMOVE_COMPLETED,
+          completedItem: CompletedTitle
+        },
+        console.log('removed called no payload')
+      )
   };
 };
 

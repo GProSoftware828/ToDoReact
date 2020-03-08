@@ -23,8 +23,9 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  switch (action.types) {
+  switch (action.type) {
     case actionTypes.ADD_TODO:
+      console.log('Reducer payload add: ', action.todoTitle);
       return {
         // const addItem = async (e) => {
         //   e.preventDefault();
@@ -55,12 +56,10 @@ const reducer = (state = initialState, action) => {
         // },
         // additem()
         ...state,
-        todos: {
-          ...state.todos,
-          [action.todoTitle]: state.todos[action.todoTitle] + 1
-        }
+        todos: [...state.todos.concat(action.todoTitle)]
       };
     case actionTypes.ADD_COMPLETED:
+      console.log('Reducer payload completed: ', action.todoTitle);
       return {
         // async completedItem(item) {
         //   const newTodos = this.state.todos.filter(todo => {
@@ -91,16 +90,16 @@ const reducer = (state = initialState, action) => {
         //   console.log(JSON.parse(completedStore));
         // }
         ...state,
-        completed: {
-          ...state.completeds,
-          [action.completedTitle]: state.completeds[action.completedTitle] + 1
-        },
-        todos: {
-          ...state.todos,
-          [action.todoTitle]: state.todos[action.todoTitle] - 1
-        }
+        // const current = ...state.completeds
+        completed: [...state.completed.concat(action.todoTitle)]
+        // use a find to delete it:
+        //   todos: {
+        //     ...state.todos,
+        //     [action.todoTitle]: state.todos[action.todoTitle] - 1
+        //   }
       };
     case actionTypes.REMOVE_COMPLETED:
+      console.log('Reducer payload removed: ', action.completedItem);
       return {
         // async removeItem(item) {
         //   const newTodos = this.state.completed.filter(todo => {
