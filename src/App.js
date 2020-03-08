@@ -3,8 +3,10 @@ import UniqueId from 'react-html-id';
 import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import ls from 'local-storage';
+import { connect } from 'react-redux';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
+import * as actionTypes from './store/actions';
 
 export class App extends React.Component {
   constructor(props) {
@@ -26,58 +28,64 @@ export class App extends React.Component {
     };
   }
 
-  async addItem(e) {
-    e.preventDefault();
-    let newItem = { title: this.newItem.value };
-    const isOnTheList = this.state.todos.includes(newItem);
-    if (isOnTheList) {
-      this.setState({
-        message: 'This To-do is already on the list.'
-      });
-    } else {
-      newItem =
-        { title: this.newItem.value, id: this.nextUniqueId() } &&
-        newItem !== '' &&
-        this.setState({
-          todos: [...this.state.todos, newItem],
-          message: 'Added entry to to-do list'
-        });
-      await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
-    }
-    this.addForm.reset();
-    await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
-    const store = await localStorage.getItem('toDos');
-    const newTodos = JSON.parse(store);
+  // async addItem(e) {
+  //   e.preventDefault();
+  //   let newItem = { title: this.newItem.value };
+  //   const isOnTheList = this.state.todos.includes(newItem);
+  //   if (isOnTheList) {
+  //     this.setState({
+  //       message: 'This To-do is already on the list.'
+  //     });
+  //   } else {
+  //     newItem =
+  //       { title: this.newItem.value, id: this.nextUniqueId() } &&
+  //       newItem !== '' &&
+  //       this.setState({
+  //         todos: [...this.state.todos, newItem],
+  //         message: 'Added entry to to-do list'
+  //       });
+  //     await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
+  //   }
+  //   this.addForm.reset();
+  //   await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
+  //   const store = await localStorage.getItem('toDos');
+  //   const newTodos = JSON.parse(store);
+  // }
+
+  completedItem(item) {
+    this.props.onTodoRemoved(item);
+    this.props.onCompletedAdded(item);
+    console.log('see if statee updated and not LS: ', this.props.completed);
   }
 
-  async completedItem(item) {
-    const newTodos = this.state.todos.filter(todo => {
-      return todo !== item;
-    });
-    if (1 === 1) {
-      this.setState({
-        completed: [...this.state.completed, item],
-        message: 'Added to completed list',
-        todos: [...newTodos]
-      });
-      await localStorage.setItem(
-        'completeds',
-        JSON.stringify(this.state.completed)
-      );
-      await localStorage.setItem('toDos', JSON.stringify([...newTodos]));
-    }
-    await localStorage.setItem(
-      'completeds',
-      JSON.stringify(this.state.completed)
-    );
-    await localStorage.setItem('toDos', JSON.stringify([...newTodos]));
-    const completedStore = await localStorage.getItem('completeds');
-    // this.setState({
-    //   completedLS: [...completedStore]
-    // });
-    console.log('Here is get ');
-    console.log(JSON.parse(completedStore));
-  }
+  // async completedItem(item) {
+  //   const newTodos = this.state.todos.filter(todo => {
+  //     return todo !== item;
+  //   });
+  //   if (1 === 1) {
+  //     this.setState({
+  //       completed: [...this.state.completed, item],
+  //       message: 'Added to completed list',
+  //       todos: [...newTodos]
+  //     });
+  //     await localStorage.setItem(
+  //       'completeds',
+  //       JSON.stringify(this.state.completed)
+  //     );
+  //     await localStorage.setItem('toDos', JSON.stringify([...newTodos]));
+  //   }
+  //   await localStorage.setItem(
+  //     'completeds',
+  //     JSON.stringify(this.state.completed)
+  //   );
+  //   await localStorage.setItem('toDos', JSON.stringify([...newTodos]));
+  //   const completedStore = await localStorage.getItem('completeds');
+  //   // this.setState({
+  //   //   completedLS: [...completedStore]
+  //   // });
+  //   console.log('Here is get ');
+  //   console.log(JSON.parse(completedStore));
+  // }
   async removeItem(item) {
     const newTodos = this.state.completed.filter(todo => {
       return todo !== item;
@@ -103,7 +111,8 @@ export class App extends React.Component {
   };
 
   render() {
-    const { todos, completed, message } = this.state;
+    const { message } = this.state;
+    const { todos, completed } = this.props;
     return (
       <div>
         <div className="header">
@@ -121,7 +130,8 @@ export class App extends React.Component {
               <form
                 ref={input => (this.addForm = input)}
                 onSubmit={e => {
-                  this.addItem(e);
+                  // this.addItem(e);
+                  this.onTodoAdded(e);
                 }}
               >
                 <div>
@@ -191,4 +201,31 @@ export class App extends React.Component {
     );
   }
 }
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    todos: state.todos,
+    completed: state.completed
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTodoAdded: ToDoTitle =>
+      dispatch({ type: actionTypes.ADD_TODO, todoTitle: ToDoTitle }),
+    onTodoRemoved: ToDoTitle =>
+      dispatch({ type: actionTypes.REMOVE_TODO, todoTitle: ToDoTitle }),
+    onCompletedAdded: CompletedToDo =>
+      dispatch({
+        type: actionTypes.ADD_COMPLETED,
+        completedTitle: CompletedToDo
+      }),
+    onCompletedRemoved: CompletedToDo =>
+      dispatch({
+        type: actionTypes.REMOVE_COMPLETED,
+        completedTitle: CompletedToDo
+      })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
