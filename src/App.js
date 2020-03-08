@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import UniqueId from 'react-html-id';
 import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import ls from 'local-storage';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
+import * as actionTypes from './store/actions';
 
 export class App extends React.Component {
   constructor(props) {
@@ -103,7 +105,8 @@ export class App extends React.Component {
   };
 
   render() {
-    const { todos, completed, message } = this.state;
+    const { /*todos, completed,*/ message } = this.state;
+    const { todos, completed } = this.props;
     return (
       <div>
         <div className="header">
@@ -121,7 +124,8 @@ export class App extends React.Component {
               <form
                 ref={input => (this.addForm = input)}
                 onSubmit={e => {
-                  this.addItem(e);
+                  // this.addItem(e);
+                  this.props.onTodoAdded(e);
                 }}
               >
                 <div>
@@ -152,7 +156,8 @@ export class App extends React.Component {
                 <td>
                   {todos.map(item => (
                     <ToDo
-                      click={() => this.completedItem(item)}
+                      // click={() => this.completedItem(item)}
+                      click={() => this.props.onTodoCompleted(item)}
                       title={item.title}
                       key={item.id}
                     />
@@ -175,7 +180,8 @@ export class App extends React.Component {
                     <td>
                       {completed.map(item => (
                         <Completed
-                          click={() => this.removeItem(item)}
+                          // click={() => this.removeItem(item)}
+                          click={() => this.props.onRemoveItem(item)}
                           title={item.title}
                           key={item.id}
                         />
