@@ -208,7 +208,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onTodoAdded: ToDoTitle =>
-      dispatch({ type: actionTypes.ADD_TODO, todoTitle: ToDoTitle }),
+      dispatch(
+        { type: actionTypes.ADD_TODO, todoTitle: ToDoTitle },
+        console.log('dispatch called no payload')
+      ),
     onTodoCompleted: ToDoTitle =>
       dispatch({
         type: actionTypes.ADD_COMPLETED,
