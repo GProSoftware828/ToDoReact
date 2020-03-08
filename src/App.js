@@ -28,29 +28,31 @@ export class App extends React.Component {
     };
   }
 
-  // async addItem(e) {
-  //   e.preventDefault();
-  //   let newItem = { title: this.newItem.value };
-  //   const isOnTheList = this.state.todos.includes(newItem);
-  //   if (isOnTheList) {
-  //     this.setState({
-  //       message: 'This To-do is already on the list.'
-  //     });
-  //   } else {
-  //     newItem =
-  //       { title: this.newItem.value, id: this.nextUniqueId() } &&
-  //       newItem !== '' &&
-  //       this.setState({
-  //         todos: [...this.state.todos, newItem],
-  //         message: 'Added entry to to-do list'
-  //       });
-  //     await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
-  //   }
-  //   this.addForm.reset();
-  //   await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
-  //   const store = await localStorage.getItem('toDos');
-  //   const newTodos = JSON.parse(store);
-  // }
+  // this.props.onTodoAdded(e)
+  async addItem(e) {
+    e.preventDefault();
+    let newItem = { title: this.newItem.value };
+    this.props.onTodoAdded(newItem);
+    // const isOnTheList = this.state.todos.includes(newItem);
+    // if (isOnTheList) {
+    //   this.setState({
+    //     message: 'This To-do is already on the list.'
+    //   });
+    // } else {
+    //   newItem =
+    //     { title: this.newItem.value, id: this.nextUniqueId() } &&
+    //     newItem !== '' &&
+    //     this.setState({
+    //       todos: [...this.state.todos, newItem],
+    //       message: 'Added entry to to-do list'
+    //     });
+    //   await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
+    // }
+    // this.addForm.reset();
+    // await localStorage.setItem('toDos', JSON.stringify(this.state.todos));
+    // const store = await localStorage.getItem('toDos');
+    // const newTodos = JSON.parse(store);
+  }
 
   // async completedItem(item) {
   //   const newTodos = this.state.todos.filter(todo => {
@@ -124,8 +126,9 @@ export class App extends React.Component {
               <form
                 ref={input => (this.addForm = input)}
                 onSubmit={e => {
-                  // this.addItem(e);
-                  this.props.onTodoAdded(e);
+                  this.addItem(e);
+                  // console.log('event: ', e);
+                  // this.props.onTodoAdded(e);
                 }}
               >
                 <div>
