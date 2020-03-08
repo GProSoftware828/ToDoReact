@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as actionTypes from './actions';
 
 const initialState = {
@@ -17,15 +18,13 @@ const reducer = (state = initialState, action) => {
     case actionTypes.ADD_TODO:
       return {
         ...state,
-        todos: [...state.todos.concat(action.todoTitle)]
+        todos: _.concat(state.todos, action.todoTitle)
       };
     case actionTypes.ADD_COMPLETED:
       return {
         ...state,
-        todos: state.todos.filter(function(uncompletedTodos) {
-          return uncompletedTodos !== action.todoTitle;
-        }),
-        completed: [...state.completed.concat(action.todoTitle)]
+        todos: _.pull(state.todos, action.todoTitle),
+        completed: _.concat(state.completed, action.todoTitle)
       };
     case actionTypes.REMOVE_COMPLETED:
       return {
