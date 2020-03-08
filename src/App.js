@@ -41,6 +41,10 @@ export class App extends React.Component {
       <div>
         <div className="header">
           <h1 className="banner">Your To-Do's</h1>
+          <div className="instructions">
+            Click the plus to add one. Click the todo itself to move lists or
+            remove. Click 'Show Completed'.
+          </div>
           <p className="msg">{message}</p>
           <img
             src={Plus}

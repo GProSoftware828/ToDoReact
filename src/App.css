@@ -64,3 +64,9 @@
   color: green;
   margin-left: 2rem;
 }
+
+.instructions {
+  color: white;
+  margin-left: 2rem;
+  font-size: small;
+}
