@@ -5,7 +5,11 @@ import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
-import * as actionTypes from './store/actions';
+import {
+  onTodoAdded,
+  onTodoCompleted,
+  onRemoveItem
+} from './store/actionCreators';
 
 export class App extends React.Component {
   constructor(props) {
@@ -24,12 +28,10 @@ export class App extends React.Component {
   }
 
   toggleInputHandler = () => {
-    const doesShow = this.state.showForm;
-    this.setState({ showForm: !doesShow });
+    this.setState({ showForm: !this.state.showForm });
   };
   toggleCompletedHandler = () => {
-    const doesShow = this.state.showCompleted;
-    this.setState({ showCompleted: !doesShow });
+    this.setState({ showCompleted: !this.state.showCompleted });
   };
 
   render() {
@@ -130,21 +132,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onTodoAdded: ToDoTitle =>
-      dispatch({ type: actionTypes.ADD_TODO, todoTitle: ToDoTitle }),
-    onTodoCompleted: ToDoTitle =>
-      dispatch({
-        type: actionTypes.ADD_COMPLETED,
-        todoTitle: ToDoTitle
-      }),
-    onRemoveItem: CompletedTitle =>
-      dispatch({
-        type: actionTypes.REMOVE_COMPLETED,
-        completedItem: CompletedTitle
-      })
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, {
+  onTodoAdded,
+  onTodoCompleted,
+  onRemoveItem
+})(App);
