@@ -3,26 +3,24 @@ import UniqueId from 'react-html-id';
 import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import ls from 'local-storage';
-import { connect } from 'react-redux';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
-import * as actionTypes from './store/actions';
 
 export class App extends React.Component {
   constructor(props) {
     super(props);
     UniqueId.enableUniqueIds(this);
     this.state = {
-      todos: ls.get('toDos') || [
-        { title: 'note one', id: '231r' },
-        { title: 'note two', id: 'efef' },
-        { title: 'note three', id: 'sd09s' }
-      ],
-      message: '',
-      completed: ls.get('completeds') || [
-        { title: '1', id: 'grhwg' },
-        { title: '2', id: '9joi' }
-      ],
+      // todos: ls.get('toDos') || [
+      //   { title: 'note one', id: '231r' },
+      //   { title: 'note two', id: 'efef' },
+      //   { title: 'note three', id: 'sd09s' }
+      // ],
+      // message: '',
+      // completed: ls.get('completeds') || [
+      //   { title: '1', id: 'grhwg' },
+      //   { title: '2', id: '9joi' }
+      // ],
       showForm: false,
       showCompleted: false
     };
@@ -52,12 +50,6 @@ export class App extends React.Component {
   //   const newTodos = JSON.parse(store);
   // }
 
-  completedItem(item) {
-    this.props.onTodoRemoved(item);
-    this.props.onCompletedAdded(item);
-    console.log('see if statee updated and not LS: ', this.props.completed);
-  }
-
   // async completedItem(item) {
   //   const newTodos = this.state.todos.filter(todo => {
   //     return todo !== item;
@@ -86,20 +78,20 @@ export class App extends React.Component {
   //   console.log('Here is get ');
   //   console.log(JSON.parse(completedStore));
   // }
-  async removeItem(item) {
-    const newTodos = this.state.completed.filter(todo => {
-      return todo !== item;
-    });
-    if (1 === 1) {
-      this.setState({
-        completed: [...newTodos],
-        message: 'Deleted old to-do'
-      });
-      await localStorage.setItem('completeds', JSON.stringify([...newTodos]));
-    }
-    await localStorage.setItem('completeds', JSON.stringify([...newTodos]));
-    const completedRemovals = await localStorage.getItem('completeds');
-  }
+  // async removeItem(item) {
+  //   const newTodos = this.state.completed.filter(todo => {
+  //     return todo !== item;
+  //   });
+  //   if (1 === 1) {
+  //     this.setState({
+  //       completed: [...newTodos],
+  //       message: 'Deleted old to-do'
+  //     });
+  //     await localStorage.setItem('completeds', JSON.stringify([...newTodos]));
+  //   }
+  //   await localStorage.setItem('completeds', JSON.stringify([...newTodos]));
+  //   const completedRemovals = await localStorage.getItem('completeds');
+  // }
 
   toggleInputHandler = () => {
     const doesShow = this.state.showForm;
@@ -111,8 +103,7 @@ export class App extends React.Component {
   };
 
   render() {
-    const { message } = this.state;
-    const { todos, completed } = this.props;
+    const { todos, completed, message } = this.state;
     return (
       <div>
         <div className="header">
@@ -130,8 +121,7 @@ export class App extends React.Component {
               <form
                 ref={input => (this.addForm = input)}
                 onSubmit={e => {
-                  // this.addItem(e);
-                  this.onTodoAdded(e);
+                  this.addItem(e);
                 }}
               >
                 <div>
@@ -213,17 +203,15 @@ const mapDispatchToProps = dispatch => {
   return {
     onTodoAdded: ToDoTitle =>
       dispatch({ type: actionTypes.ADD_TODO, todoTitle: ToDoTitle }),
-    onTodoRemoved: ToDoTitle =>
-      dispatch({ type: actionTypes.REMOVE_TODO, todoTitle: ToDoTitle }),
-    onCompletedAdded: CompletedToDo =>
+    onTodoCompleted: ToDoTitle =>
       dispatch({
         type: actionTypes.ADD_COMPLETED,
-        completedTitle: CompletedToDo
+        todoTitle: ToDoTitle
       }),
-    onCompletedRemoved: CompletedToDo =>
+    onRemoveItem: CompletedTitle =>
       dispatch({
         type: actionTypes.REMOVE_COMPLETED,
-        completedTitle: CompletedToDo
+        completedItem: CompletedTitle
       })
   };
 };
