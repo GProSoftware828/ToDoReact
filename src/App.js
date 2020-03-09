@@ -1,6 +1,5 @@
 import React, { useState, useReducer } from 'react';
 import { connect } from 'react-redux';
-// import UniqueId from 'react-html-id';
 import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
@@ -8,8 +7,6 @@ import Plus from './assets/graphics/Plus.svg';
 import { reducer, initialState } from './store/reducer';
 
 const App = () => {
-  // UniqueId.enableUniqueIds(this);
-
   const [showForm, setShowForm] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
   const [newItem, setNewItem] = useState();
@@ -84,7 +81,7 @@ const App = () => {
                       dispatch({ type: 'ADD_COMPLETED', todoTitle: item })
                     }
                     title={item.title}
-                    key={item.id}
+                    key={item.index}
                   />
                 ))}
               </td>
@@ -109,7 +106,7 @@ const App = () => {
                           })
                         }
                         title={item.title}
-                        key={item.id}
+                        key={item.index}
                       />
                     ))}
                   </td>
