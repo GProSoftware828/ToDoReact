@@ -5,22 +5,10 @@ import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
-import reducer from './store/reducer';
+import { reducer, initialState } from './store/reducer';
 
 const App = () => {
   // UniqueId.enableUniqueIds(this);
-
-  const initialState = {
-    todos: [
-      { title: 'note one', id: '34234' },
-      { title: 'note two', id: '32k23' },
-      { title: 'note three', id: '234kl' }
-    ],
-    completed: [
-      { title: 'note abc', id: 'oi3mlkw' },
-      { title: 'note cleanup', id: '24k4m' }
-    ]
-  };
 
   const [showForm, setShowForm] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
