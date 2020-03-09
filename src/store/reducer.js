@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as actionTypes from './actions';
 
-const initialState = {
+export const initialState = {
   todos: [
     { title: 'note one', id: '34234' },
     { title: 'note two', id: '32k23' },
@@ -13,7 +13,7 @@ const initialState = {
   ]
 };
 
-const reducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_TODO:
       return {
