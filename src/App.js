@@ -1,124 +1,140 @@
-import React, { useState, useReducer } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import UniqueId from 'react-html-id';
 import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
-import { reducer, initialState } from './store/reducer';
+import {
+  onTodoAdded,
+  onTodoCompleted,
+  onRemoveItem,
+  fakeTodos
+} from './store/actionCreators';
 
-const App = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [showCompleted, setShowCompleted] = useState(false);
-  const [newItem, setNewItem] = useState();
-  const [state, dispatch] = useReducer(reducer, initialState);
+export class App extends React.Component {
+  constructor(props) {
+    super(props);
+    UniqueId.enableUniqueIds(this);
+    this.state = {
+      message: '',
+      showForm: false,
+      showCompleted: false
+    };
+  }
 
-  const addItem = e => {
+  componentDidMount() {
+    this.props.fakeTodos(); //only need 3
+  }
+
+  async addItem(e) {
     e.preventDefault();
-    let newItemAdded = { title: newItem };
-    dispatch({ type: 'ADD_TODO', todoTitle: newItemAdded });
+    let newItem = { title: this.newItem.value };
+    this.props.onTodoAdded(newItem);
+  }
+  toggleInputHandler = () => {
+    const doesShow = this.state.showForm;
+    this.setState({ showForm: !doesShow });
   };
-  const toggleInputHandler = () => {
-    setShowForm(!showForm);
-  };
-  const toggleCompletedHandler = () => {
-    setShowCompleted(!showCompleted);
+  toggleCompletedHandler = () => {
+    const doesShow = this.state.showCompleted;
+    this.setState({ showCompleted: !doesShow });
   };
 
-  const { message, todos, completed } = state;
-  return (
-    <div>
-      <div className="header">
-        <h1 className="banner">Your To-Do's</h1>
-        <div className="instructions">
-          Click the plus to add one. Click the todo itself to move lists or
-          remove. Click 'Show Completed'.
-        </div>
-        <p className="msg">{message}</p>
-        <img
-          src={Plus}
-          alt="plus_clickme_show_input_form"
-          onClick={toggleInputHandler}
-          className="plus"
-        />
-
-        {showForm ? (
-          <div className="inputForm">
-            <form
-              onSubmit={e => {
-                addItem(e);
-              }}
-            >
-              <div>
-                <input
-                  type="text"
-                  placeholder="Type To-do Here"
-                  id="newItemInput"
-                  value={newItem}
-                  onChange={e => setNewItem(e.target.value)}
-                  className="input"
-                />
-                <br />
-                <br />
-                <button className="button" type="submit">
-                  Add
-                </button>
-                <br />
-                <br />
-              </div>
-            </form>
+  render() {
+    const { message, showForm, showCompleted } = this.state;
+    const { todos, completed } = this.props;
+    return (
+      <div>
+        <div className="header">
+          <h1 className="banner">Your To-Do's</h1>
+          <div className="instructions">
+            Click the plus to add one. Click the todo itself to move lists or
+            remove. Click 'Show Completed'.
           </div>
-        ) : null}
-      </div>
+          <p className="msg">{message}</p>
+          <img
+            src={Plus}
+            alt="plus_clickme_show_input_form"
+            onClick={this.toggleInputHandler}
+            className="plus"
+          />
 
-      <div className="block">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                {todos.map(item => (
-                  <ToDo
-                    click={() =>
-                      dispatch({ type: 'ADD_COMPLETED', todoTitle: item })
-                    }
-                    title={item.title}
-                    key={item.index}
+          {showForm === true ? (
+            <div className="inputForm">
+              <form
+                ref={input => (this.addForm = input)}
+                onSubmit={e => {
+                  this.addItem(e);
+                }}
+              >
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Type To-do Here"
+                    id="newItemInput"
+                    ref={input => (this.newItem = input)}
+                    className="input"
                   />
-                ))}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button className="completedBtn" onClick={toggleCompletedHandler}>
-          Show Completed
-        </button>
-        {showCompleted ? (
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    {completed.map(item => (
-                      <Completed
-                        click={() =>
-                          dispatch({
-                            type: 'REMOVE_COMPLETED',
-                            completedItem: item
-                          })
-                        }
-                        title={item.title}
-                        key={item.index}
-                      />
-                    ))}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        ) : null}
+                  <br />
+                  <br />
+                  <button className="button" type="submit">
+                    Add
+                  </button>
+                  <br />
+                  <br />
+                </div>
+              </form>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="block">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  {todos.map(item => (
+                    <ToDo
+                      click={() => this.props.onTodoCompleted(item)}
+                      title={item.title}
+                      key={item.id}
+                    />
+                  ))}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button
+            className="completedBtn"
+            onClick={this.toggleCompletedHandler}
+          >
+            Show Completed
+          </button>
+          {showCompleted === true ? (
+            <div>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      {completed.map(item => (
+                        <Completed
+                          click={() => this.props.onRemoveItem(item)}
+                          title={item.title}
+                          key={item.id}
+                        />
+                      ))}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 const mapStateToProps = state => {
   return {
@@ -127,4 +143,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, {
+  onTodoAdded,
+  onTodoCompleted,
+  onRemoveItem,
+  fakeTodos
+})(App);
