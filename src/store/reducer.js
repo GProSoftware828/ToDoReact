@@ -5,7 +5,8 @@ import * as actionTypes from './actions';
 //move it back into app.js:
 export const initialState = {
   todos: [],
-  completed: []
+  completed: [],
+  todoCount: 3
 };
 // default value is the todos from the thunk call not initialState:
 export const reducer = (state = initialState, action) => {
@@ -13,7 +14,8 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.ADD_TODO:
       return {
         ...state,
-        todos: _.concat(state.todos, action.todoTitle)
+        todos: _.concat(state.todos, action.todoTitle),
+        todoCount: _.add(state.todoCount, action.todoAdded)
       };
     case actionTypes.ADD_COMPLETED:
       return {

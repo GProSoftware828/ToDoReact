@@ -6,6 +6,8 @@ import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
 import axios from './apis/firebase';
+import checkmark from './assets/graphics/checkmark.png';
+import Xfinished from './assets/graphics/Xfinished.png';
 import {
   onTodoAdded,
   onTodoCompleted,
@@ -33,8 +35,10 @@ export class App extends React.Component {
 
   async addItem(e) {
     e.preventDefault();
-    let newItem = { title: this.newItem.value };
-    this.props.onTodoAdded(newItem);
+    if (this.props.todoCount < 5) {
+      let newItem = { title: this.newItem.value };
+      this.props.onTodoAdded(newItem);
+    }
   }
   toggleInputHandler = () => {
     const doesShow = this.state.showForm;
@@ -50,91 +54,135 @@ export class App extends React.Component {
     const { todos, completed } = this.props;
     return (
       <div>
-        <div className="header">
-          <h1 className="banner">Your To-Do's</h1>
-          <div className="instructions">
-            Click the plus to add one. Click the todo itself to move lists or
-            remove. Click 'Show Completed'.
-          </div>
-          <p className="msg">{message}</p>
-          <img
-            src={Plus}
-            alt="plus_clickme_show_input_form"
+        <div className="horizontalContainer">
+          <div
+            className="horizontalRow1 bkgdAdd pointer"
             onClick={this.toggleInputHandler}
-            className="plus"
-          />
-
-          {showForm === true ? (
-            <div className="inputForm">
-              <form
-                ref={input => (this.addForm = input)}
-                onSubmit={e => {
-                  this.addItem(e);
-                }}
-              >
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Type To-do Here"
-                    id="newItemInput"
-                    ref={input => (this.newItem = input)}
-                    className="input"
-                  />
-                  <br />
-                  <br />
-                  <button className="button" type="submit">
-                    Add
-                  </button>
-                  <br />
-                  <br />
-                </div>
-              </form>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="block">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  {todos.map(item => (
-                    <ToDo
-                      click={() => this.props.onTodoCompleted(item)}
-                      title={item.title}
-                      key={item.id}
-                    />
-                  ))}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <button
-            className="completedBtn"
-            onClick={this.toggleCompletedHandler}
           >
-            Show Completed
-          </button>
-          {showCompleted === true ? (
-            <div>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      {completed.map(item => (
-                        <Completed
-                          click={() => this.props.onRemoveItem(item)}
-                          title={item.title}
-                          key={item.id}
-                        />
-                      ))}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          ) : null}
+            <img
+              src={Plus}
+              alt="plus_clickme_show_input_form"
+              className="plus"
+            />
+            Click to Add a Todo
+          </div>
+          <div className="horizontalRow2 bkgdTitle colTwoTitlesStyle">
+            Task Manager
+          </div>
+          <div className="horizontalRow3 bkgdInstr instrStyles">
+            Please refresh after 30 seconds if dummy data wasn't brought in.
+            Click the Todos to move to completed or remove.
+          </div>
         </div>
+        {/* <p className="msg">{message}</p> */}
+        {showForm === true ? (
+          <div className="horizontalContainer">
+            <div className="horizontalRow1"></div>
+            <div className="horizontalRow2"></div>
+            <form
+              ref={input => (this.addForm = input)}
+              onSubmit={e => {
+                this.addItem(e);
+              }}
+            >
+              <div className="horizonalRow3 formStyles">
+                <input
+                  type="text"
+                  className="formInput"
+                  placeholder="Type To-do Here"
+                  id="newItemInput"
+                  ref={input => (this.newItem = input)}
+                />
+                <button className="formBtn" type="submit">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+        <div className="horizontalContainer todoTitleMargin">
+          <div className="horizontalRow2 bkgdTodoTitle colTwoTitlesStyle">
+            Todos:
+          </div>
+          <div className="horizontalRow3 bkgdInstr instrStyles">
+            You cannot have more than five open tasks. Finish them before adding
+            others.
+          </div>
+        </div>
+        <div className="horizontalContainer todoListBtm">
+          {todos.map(item => (
+            <React.Fragment>
+              <div
+                className="horizontalRow1 pointer iconsPosition"
+                onClick={() => this.props.onTodoCompleted(item)}
+              >
+                <img
+                  data-test="clicker"
+                  src={checkmark}
+                  alt="checkmark"
+                  height="32"
+                  width="32"
+                />
+              </div>
+              <div
+                className="horizontalRow2 listStyles todoStyles listBtmBorder pointer"
+                onClick={() => this.props.onTodoCompleted(item)}
+              >
+                Click to Make Completed
+              </div>
+              <div className="horizontalRow3">
+                <ToDo
+                  title={item.title}
+                  key={item.id}
+                  click={() => this.props.onTodoCompleted(item)}
+                />
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="marginTopComp">
+          <div className="horizontalContainer">
+            <div
+              className="horizontalRow2 bkgdComplTitle colTwoTitlesStyle"
+              onClick={this.toggleCompletedHandler}
+            >
+              Show Completed
+            </div>
+          </div>
+        </div>
+        {showCompleted === true ? (
+          <div className="horizontalContainer completedListMargin">
+            {completed.map(item => (
+              <React.Fragment>
+                <div
+                  className="horizontalRow1 iconsPosition pointer"
+                  onClick={() => this.props.onRemoveItem(item)}
+                >
+                  <img
+                    data-test="clicker"
+                    src={Xfinished}
+                    alt="completed_X_mark"
+                    height="32"
+                    width="32"
+                  />
+                </div>
+                <div
+                  className="horizontalRow2 bkgdInstr listStyles listBtmBorder completedStyles pointer"
+                  onClick={() => this.props.onRemoveItem(item)}
+                >
+                  Click to Remove
+                </div>
+                <div className="horizontalRow3">
+                  <Completed
+                    click={() => this.props.onRemoveItem(item)}
+                    title={item.title}
+                    key={item.id}
+                  />
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -143,7 +191,8 @@ export class App extends React.Component {
 const mapStateToProps = state => {
   return {
     todos: state.todos,
-    completed: state.completed
+    completed: state.completed,
+    todoCount: state.todoCount
   };
 };
 
