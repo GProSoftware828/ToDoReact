@@ -5,6 +5,7 @@ import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
+import axios from './apis/firebase';
 import {
   onTodoAdded,
   onTodoCompleted,
@@ -24,7 +25,10 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fakeTodos(); //only need 3
+    this.props.fakeTodos();
+    const now = new Date();
+    const newVisitor = { visited: now };
+    axios.post('visitors.json', newVisitor);
   }
 
   async addItem(e) {
