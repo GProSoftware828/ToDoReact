@@ -4,7 +4,8 @@ import jsonPlaceholder from '../apis/jsonplaceholder';
 export const onTodoAdded = todo => {
   return {
     type: actionTypes.ADD_TODO,
-    todoTitle: todo
+    todoTitle: todo,
+    todoAdded: 1
   };
 };
 
