@@ -5,11 +5,13 @@ import { ToDo } from './ToDo/ToDo';
 import { Completed } from './Completed/Completed';
 import './App.css';
 import Plus from './assets/graphics/Plus.svg';
+import axios from './apis/firebase';
 import {
   onTodoAdded,
   onTodoCompleted,
   onRemoveItem,
-  fakeTodos
+  fakeTodos,
+  getVisits
 } from './store/actionCreators';
 
 export class App extends React.Component {
@@ -24,7 +26,11 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fakeTodos(); //only need 3
+    this.props.fakeTodos();
+    this.props.getVisits();
+    const now = new Date();
+    const newVisitor = { visited: now };
+    axios.post('visits.json', newVisitor);
   }
 
   async addItem(e) {
@@ -147,5 +153,6 @@ export default connect(mapStateToProps, {
   onTodoAdded,
   onTodoCompleted,
   onRemoveItem,
-  fakeTodos
+  fakeTodos,
+  getVisits
 })(App);
