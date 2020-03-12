@@ -70,8 +70,8 @@ export class App extends React.Component {
             Task Manager
           </div>
           <div className="horizontalRow3 bkgdInstr instrStyles">
-            Please refresh after 30 seconds if dummy data wasn't brought in.
-            Click the Todos to move to completed or remove.
+            You can download the app to see dummy data locally. For now, please
+            add and complete a task!
           </div>
         </div>
         {/* <p className="msg">{message}</p> */}
