@@ -12,7 +12,8 @@ export const onTodoAdded = todo => {
 export const onTodoCompleted = todo => {
   return {
     type: actionTypes.ADD_COMPLETED,
-    todoTitle: todo
+    todoTitle: todo,
+    todoAdded: -1
   };
 };
 

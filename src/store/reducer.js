@@ -21,7 +21,8 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         todos: _.pull(state.todos, action.todoTitle),
-        completed: _.concat(state.completed, action.todoTitle)
+        completed: _.concat(state.completed, action.todoTitle),
+        todoCount: _.add(state.todoCount, action.todoAdded)
       };
     case actionTypes.REMOVE_COMPLETED:
       return {
