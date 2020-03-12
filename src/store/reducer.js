@@ -6,7 +6,7 @@ import * as actionTypes from './actions';
 export const initialState = {
   todos: [],
   completed: [],
-  todoCount: 3
+  todoCount: 0
 };
 // default value is the todos from the thunk call not initialState:
 export const reducer = (state = initialState, action) => {
