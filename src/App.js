@@ -27,7 +27,7 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fakeTodos();
+    // this.props.fakeTodos(); uncomment this line for dummy data
     const now = new Date();
     const newVisitor = { visited: now };
     axios.post('visitors.json', newVisitor);
@@ -72,8 +72,9 @@ export class App extends React.Component {
           <div className="horizontalRow3 bkgdInstr instrStyles">
             You can download the app to see dummy data coming in from
             JSONplaceholder.typicode.com using a restful HTTP request with Axios
-            (lucky you if the browser let's CORS pass and you see it
-            sometimes!). For now, please add and complete a task!
+            (CORS was allowing it sometimes, but due to unpredictability just
+            download one of the Github releases to see the dummy data!). For
+            now, please add and complete a task!
           </div>
         </div>
         {/* <p className="msg">{message}</p> */}
