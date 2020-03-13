@@ -70,8 +70,10 @@ export class App extends React.Component {
             Task Manager
           </div>
           <div className="horizontalRow3 bkgdInstr instrStyles">
-            You can download the app to see dummy data locally. For now, please
-            add and complete a task!
+            You can download the app to see dummy data coming in from
+            JSONplaceholder.typicode.com using a restful HTTP request with Axios
+            (lucky you if the browser let's CORS pass and you see it
+            sometimes!). For now, please add and complete a task!
           </div>
         </div>
         {/* <p className="msg">{message}</p> */}
